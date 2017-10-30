@@ -22,7 +22,10 @@ Dependencies
  * rsync
  * IPFS (daemonized)
 
-First generate alpine key. Under this key repository will be published. For example:
+Adjust `settings.sh` to yout needs.
+
+Default settings will work just fine. You only have to generate alpine IPFS key.
+Under this key repository will be published. For example:
 
     ipfs key gen --type rsa --size 4096 alpine
 

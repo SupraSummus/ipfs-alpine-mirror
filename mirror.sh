@@ -1,4 +1,5 @@
 #!/bin/sh
+set -xe
 
 # make sure we never run 2 rsync at the same time
 lockfile="/tmp/alpine-mirror.lock"
@@ -6,9 +7,8 @@ if [ -z "$flock" ] ; then
   exec env flock=1 flock -n $lockfile "$0" "$@"
 fi
 
-src=rsync://rsync.alpinelinux.org/alpine
-dest=alpine
-key=alpine
+source ./settings.sh
+
 name=$(ipfs key list -l | grep $key | cut -d ' ' -f 1)
 
 mkdir -p "$dest"
@@ -21,12 +21,7 @@ rsync \
 	--delay-updates \
 	--timeout=600 \
 	--progress \
-	--include 'edge' \
-	--include '*/main/' \
-	--include '*/community/' \
-	--include '*/testing/' \
-	--include '*/*/x86_64/***' \
-	--include '*/*/armhf/***' \
+	${includes[@]/#/--include } \
 	--exclude '*' \
 	"$src" "$dest"
 
